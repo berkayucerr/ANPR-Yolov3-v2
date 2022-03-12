@@ -118,10 +118,6 @@ class yolov3(object):
 
 
     def predict(self, feature_maps):
-        '''
-        Receive the returned feature_maps from `forward` function,
-        the produce the output predictions at the test stage.
-        '''
         feature_map_1, feature_map_2, feature_map_3 = feature_maps
 
         feature_map_anchors = [(feature_map_1, self.anchors[6:9]),
