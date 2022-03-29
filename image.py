@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from utils.misc_utils import parse_anchors
 from utils.nms_utils import gpu_nms
+from blob_detection import blackW
 from utils.plot_utils import plot_one_box
 from utils.data_aug import letterbox_resize
 from utils.char_rec import char_rec
@@ -28,6 +29,7 @@ with tf.compat.v1.Session() as sess:
     tarama=os.scandir(test_files_path)
     for belge in tarama:
         img_ori =cv2.imread(test_files_path+belge.name)
+        print('image = '+belge.name)
         img, resize_ratio, dw, dh = letterbox_resize(img_ori, new_size, new_size)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = np.asarray(img, np.float32)
@@ -36,7 +38,7 @@ with tf.compat.v1.Session() as sess:
         boxes_, scores_, labels_ = sess.run([boxes, scores, labels], feed_dict={input_data: img})
         boxes_[:, [0, 2]] = (boxes_[:, [0, 2]] - dw) / resize_ratio
         boxes_[:, [1, 3]] = (boxes_[:, [1, 3]] - dh) / resize_ratio
-        
+        print(boxes_)
         for i in range(len(boxes_)):
             x0, y0, x1, y1 = boxes_[i]
             boxtemp=boxes_[0]
@@ -45,7 +47,18 @@ with tf.compat.v1.Session() as sess:
             w=int(boxtemp[2])
             h=int(boxtemp[3])
             crop=img_ori[y:h,x:w]
-            lpText=char_rec(crop)
+            # crop=blackW(crop)
+            lpText,char_boxes=char_rec(crop)
+            hImg, wImg ,_= crop.shape
+            for b in char_boxes.splitlines():
+                b = b.split(' ')
+                print(b)
+                x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+                cv2.rectangle(crop, (x, hImg - y), (w, hImg - h), (50, 50, 255), 1)
+                cv2.putText(crop, b[0], (x, hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50, 205, 50), 1)
+                cv2.imshow('temp',crop)
+                cv2.waitKey(0)
+                # plot_one_box(img_ori, [a1, a2, a3, a4], label=title , color=[0,255,0])
             plot_one_box(img_ori, [x0, y0, x1, y1], label=lpText + ', {:.2f}%'.format(scores_[i] * 100), color=[0,0,255])
             print(lpText)
         cv2.imshow('image', img_ori)
