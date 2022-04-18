@@ -60,7 +60,7 @@ with tf.compat.v1.Session() as sess:
             y1=int(y1)
             crop=img_ori[y0:y1,x0:x1]
             img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            lpText=image_to_string(crop,lang='eng',config = r'-c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVXWYZ0123456789 --psm 6 --psm 11 ')
+            lpText=image_to_string(crop,lang='eng',config ='--oem 3 --psm 6 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPRSTUVYZ0123456789')
             plot_one_box(img_ori, [x0, y0, x1, y1], label=lpText + ', {:.2f}%'.format(scores_[i] * 100), color=[0,0,255])
 
         t2 = time.time()
