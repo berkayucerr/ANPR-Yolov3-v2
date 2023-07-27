@@ -1,15 +1,17 @@
 # ANPR-Yolov3-v2
-An anpr project coded based on the Yolo-Tensorflow Algorithm(GPU)
+An automatic number plate recognition project coded based on the Yolo-Tensorflow Algorithm
+That's running on the GPU!
 
 
 ---Pre-trained weights for license plate recognition---
 
 https://drive.google.com/file/d/1JyHaj72pyC2AhIhthV2MzYtqOrY0_yyC/view?usp=sharing
 
-1: Download pre-trained weights main directory.
+1: Firstly, you have to download pre-trained weights to the main directory of project.
 
-2: Convert pre-trained weights with convert_weights.py file and move converted weight files into data/custom directory.
+2: Convert pre-trained weights using convert_weights.py file and move converted weight files into data/custom directory.
 
+3: as you working on realtime(webcam), you can use webcam.py or if you working on images, you can use image.py file.
 ----
 
 Test Device M1 Macbook Pro : Avarage 17.8 fps on GPU
